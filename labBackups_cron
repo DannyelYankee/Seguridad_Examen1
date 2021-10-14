@@ -1,0 +1,23 @@
+vim cron_backup.sh
+
+#!/bin/bash
+
+
+SOURCE="${/home/daniel/Escritorio/Seguridad/Lab_Backup}"
+BACKUP_DIR="/mnt/data/backups"
+DATE="$(date +"%d-%m-%Y")"
+BACKUP_PATH="${BACKUP_DIR}/${DATE}"
+LATEST="${BACKUP_DIR}/latest"
+
+sudo mkdir "${BACKUP_DIR}"
+
+sudo rsync -av --link-dest="${LATEST}" "${SOURCE}" "${BACKUP_PATH}"
+sudo mysqldump -u root SGSII > backup_sgssi_"${DATE}".sql
+sudo mv backup_sgssi_"${DATE}".sql "${BACKUP_PATH}"
+
+luego en terminal
+
+crontab -e 
+ponemos:
+
+0 12 * * * /home/daniel/Escritorio/Seguridad/cron_backup.sh
